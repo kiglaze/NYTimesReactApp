@@ -1,11 +1,13 @@
 import React, { Component } from "react";
+import API from "../utils/API";
 
 class Form extends Component {
   // Setting the initial values of this.state.username and this.state.password
   state = {
     searchTerm: "",
     startYear: "",
-    endYear: ""
+    endYear: "",
+    newsResults: []
   };
 
   // handle any changes to the input fields
@@ -23,7 +25,9 @@ class Form extends Component {
   // When the form is submitted, prevent the default event and alert the username and password
   handleFormSubmit = event => {
     event.preventDefault();
-    alert(`Search Term: ${this.state.searchTerm}\nStart Year: ${this.state.startYear}\nEnd Year: ${this.state.endYear}`);
+    if(this.state.searchTerm) {
+      API.getNewsResults(this.state.searchTerm);
+    }
     this.setState({ searchTerm: "", startYear: "", endYear: "" });
   };
 
