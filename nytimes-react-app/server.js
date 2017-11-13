@@ -24,15 +24,6 @@ mongoose.connect(
   }
 );
 
-db.News
-  .create({ title: "Ernest Hemingway", snippet: "He is back" })
-  .then(function(dbNews) {
-    console.log(dbNews);
-  })
-  .catch(function(err) {
-    console.log(err.message);
-  });
-
 // Start the API server
 app.listen(PORT, function() {
   console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`);
