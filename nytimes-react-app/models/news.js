@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const newsSchema = new Schema({
   title: { type: String, required: true },
-  author: { type: String, required: true }
+  snippet: { type: String, required: true }
 });
 
 const News = mongoose.model("News", newsSchema);

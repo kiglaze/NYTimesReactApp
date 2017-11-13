@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Jumbotron from "../../components/Jumbotron";
 import DeleteBtn from "../../components/DeleteBtn";
+import SaveBtn from "../../components/SaveBtn";
 import API from "../../utils/API";
 import { Col, Row, Container } from "../../components/Grid";
 import { List, ListItem } from "../../components/List";
@@ -10,6 +11,7 @@ class News extends Component {
   // Setting our component's initial state
   state = {
     news: [],
+    savedNews: [],
     searchTerm: "",
     startYear: "",
     endYear: "",
@@ -18,21 +20,27 @@ class News extends Component {
 
   // When the component mounts, load all news and save them to this.state.news
   componentDidMount() {
-    // this.loadNews();
+    this.loadNews();
   }
 
   // Loads all news  and sets them to this.state.news
   loadNews = () => {
     API.getNews()
-      .then(res =>
-        this.setState({ news: res.data.response.docs, searchTerm: "", startYear: "", endYear: "" })
-      )
+      .then(res => {
+        this.setState({ savedNews: res.data, searchTerm: "", startYear: "", endYear: "" })
+      })
       .catch(err => console.log(err));
   };
 
   // Deletes a news result from the database with a given id, then reloads news from the db
   deleteNews = id => {
-    API.deleteNews(id)
+    API.deleteNewsResult(id)
+      .then(res => this.loadNews())
+      .catch(err => console.log(err));
+  };
+
+  saveNewsResult = (newsData) => {
+    API.saveNewsResult(newsData)
       .then(res => this.loadNews())
       .catch(err => console.log(err));
   };
@@ -137,7 +145,35 @@ class News extends Component {
                         </h4>
                         <p>{news.snippet}</p>
                       </a>
-                      <DeleteBtn onClick={() => this.deleteNews(news._id)} />
+                      <SaveBtn onClick={() => this.saveNewsResult(news)} />
+                    </ListItem>
+                  );
+                })
+              }
+              </List>
+            ) : (
+              <h3>No Results to Display</h3>
+            )}
+          </Col>
+        </Row>
+        <Row>
+          <Col size="md-12">
+<Jumbotron>
+              <h1>Saved News</h1>
+            </Jumbotron>
+            {this.state.savedNews.length ? (
+              <List>
+                {
+                  this.state.savedNews.map(savedNews => {
+                  return (
+                    <ListItem key={savedNews._id}>
+                      <a href={"/savedNews/" + savedNews._id}>
+                        <h4>
+                          {savedNews.title}
+                        </h4>
+                        <p>{savedNews.snippet}</p>
+                      </a>
+                      <DeleteBtn onClick={() => this.deleteNews(savedNews._id)} />
                     </ListItem>
                   );
                 })
