@@ -64,6 +64,9 @@ class News extends Component {
       API.searchNews(this.state.searchTerm, this.state.startYear, this.state.endYear)
         .then(res => {
           var responseDataArray = (typeof res.data.response.docs !== "undefined") ? res.data.response.docs : [];
+          if(responseDataArray && this.state.numberRecords && parseInt(this.state.numberRecords)) {
+            responseDataArray = responseDataArray.slice(0, this.state.numberRecords);
+          }
           this.setState({ news: responseDataArray, searchTerm: "", startYear: "", endYear: "" })
         })
         .catch(err => console.log(err));
@@ -93,7 +96,7 @@ class News extends Component {
         </div>
           <div className="form-group">
             <label htmlFor="pwd">Number of Records to Retrieve:</label>
-            <select className="form-control" id="num-records-select" defaultValue="5">
+            <select className="form-control" name="numberRecords" id="numberRecords" defaultValue="5" onChange={this.handleInputChange}>
               <option value="1">1</option>
               <option value="5">5</option>
               <option value="10">10</option>
