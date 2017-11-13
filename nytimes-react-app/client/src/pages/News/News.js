@@ -40,7 +40,9 @@ class News extends Component {
   };
 
   saveNewsResult = (newsData) => {
-    API.saveNewsResult(newsData)
+    var newsTitle = (typeof newsData.headline.main !== "undefined") ? newsData.headline.main : "";
+    var newsSnippet = (typeof newsData.snippet !== "undefined") ? newsData.snippet : "";
+    API.saveNewsResult({title: newsTitle, snippet: newsSnippet})
       .then(res => this.loadNews())
       .catch(err => console.log(err));
   };
